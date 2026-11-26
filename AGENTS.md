@@ -1,0 +1,10 @@
+# Project collaboration
+
+- The owner makes product and visual decisions and accepts each phase. The project lead reviews the plan and authorizes the next phase. The engineering agent audits, implements, verifies, and hands off within the active phase.
+- Read `README.md` and `docs/roadmap.md` before starting. In the owner's workspace, check the latest phase record in `.internal/` for the audit, decisions, and pending tests. If an authorization or local record is missing, establish the active scope with the owner or project lead.
+- Phase 1 covers project setup and feasibility. Stop at handoff and wait for an explicit Phase 2 instruction. Dependency installation, system changes, Git commits, remote setup, pushes, and publication require authorization in the applicable phase.
+- Treat `themes/neural-overdrive/reference/codex-cyber-boot-v03.html` as the approved visual baseline. Preserve its bytes. Put any future runtime adaptation in a separate file and ask the owner to approve changes to the visual design.
+- Use supported Windows launch and window APIs. Keep the launcher independent of the ChatGPT desktop installation, processes, accounts, projects, chats, Skills, settings, and update mechanism. Process injection, security workarounds, and registry, environment, or startup changes are outside scope.
+- Keep internal reports and workstation evidence in `.internal/`. Use generic paths and sanitized evidence in public material. Collect only the metadata a test needs and leave credentials, tokens, and private content out of project files and logs.
+- For results, distinguish direct observations, source-based inferences, and pending verification. Identify demo telemetry as simulated. Record material decisions and unresolved issues in the phase handoff.
+- Write public documentation in English, with Chinese where it helps the owner or contributors. Review public files, history, release archives, license notices, and branding before publication. A Git ignore rule controls untracked files and is only one part of that review.

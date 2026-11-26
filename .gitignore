@@ -1,0 +1,42 @@
+# Local audit, handoff, and workstation evidence
+/.internal/
+/codex-cyber-boot-v03.html
+
+# User-specific settings, credentials, and local overrides
+/.vs/
+/.vscode/
+/.idea/
+/.codex/
+/.agents/
+/.aws/
+.env
+.env.*
+!.env.example
+*.user
+*.suo
+*.userprefs
+*.pfx
+*.p12
+*.pem
+*.key
+
+# Build outputs, packages, and local caches
+/.local/
+.launcher-data/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+/artifacts/
+/dist/
+/publish/
+/TestResults/
+node_modules/
+__pycache__/
+.pytest_cache/
+.cache/
+*.log
+*.dmp
+*.tmp
+Thumbs.db
+Desktop.ini
