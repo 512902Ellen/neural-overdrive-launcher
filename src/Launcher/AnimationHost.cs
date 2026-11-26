@@ -94,7 +94,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
         {
             await Dispatcher.Yield(DispatcherPriority.Background);
             if (closed) return;
-            byte[] theme = ThemeCatalog.Load();
+            byte[] theme = ThemeCatalog.LoadRuntime(options.Mode);
             string profile = Path.Combine(LaunchLog.DataDirectory, "webview2");
             if (Directory.CreateDirectory(LaunchLog.DataDirectory).Attributes.HasFlag(FileAttributes.ReparsePoint) ||
                 Directory.CreateDirectory(profile).Attributes.HasFlag(FileAttributes.ReparsePoint))
@@ -111,7 +111,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
             if (closed) return;
             record($"webview-initialized-{environment.BrowserVersionString}");
             Configure(view.CoreWebView2, environment, theme, options);
-            view.CoreWebView2.Navigate(BridgeSession.Entry);
+            view.CoreWebView2.Navigate(ThemeCatalog.BuiltIn.Entry);
         }
         catch (WebView2RuntimeNotFoundException)
         {
@@ -148,7 +148,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
         bool navigating = false;
         core.NavigationStarting += (_, args) =>
         {
-            args.Cancel = navigating || args.IsRedirected || args.Uri != BridgeSession.Entry;
+            args.Cancel = navigating || args.IsRedirected || args.Uri != ThemeCatalog.BuiltIn.Entry;
             if (!args.Cancel) navigating = true;
         };
         core.FrameNavigationStarting += (_, args) => args.Cancel = true;
@@ -164,7 +164,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
             CoreWebView2WebResourceRequestSourceKinds.All);
         core.WebResourceRequested += (_, args) =>
         {
-            bool entry = args.Request.Uri == BridgeSession.Entry && args.Request.Method == "GET" &&
+            bool entry = args.Request.Uri == ThemeCatalog.BuiltIn.Entry && args.Request.Method == "GET" &&
                 args.ResourceContext == CoreWebView2WebResourceContext.Document;
             args.Response = entry
                 ? environment.CreateWebResourceResponse(new MemoryStream(theme, writable: false), 200, "OK", Headers)
@@ -188,7 +188,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
         switch (bridge.Receive(args.Source, args.WebMessageAsJson))
         {
             case BridgeEvent.Ready:
-                bool reduced = !SystemParameters.ClientAreaAnimation;
+                bool reduced = options.RespectReducedMotion && !SystemParameters.ClientAreaAnimation;
                 record(reduced ? "theme-ready-reduced-motion" : "theme-ready");
                 core.PostWebMessageAsJson(bridge.StartMessage(options, reduced));
                 if (window!.IsActive) view!.Focus();

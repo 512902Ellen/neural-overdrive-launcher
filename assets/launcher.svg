@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Codex Boot Animation energy core</title>
+  <defs>
+    <linearGradient id="surface" x2=".8" y2="1">
+      <stop stop-color="#19233e"/>
+      <stop offset="1" stop-color="#0b1023"/>
+    </linearGradient>
+    <linearGradient id="edge" x2=".9" y2="1">
+      <stop stop-color="#58799c"/>
+      <stop offset="1" stop-color="#5a4a82"/>
+    </linearGradient>
+    <linearGradient id="core" x1=".15" y1="0" x2=".85" y2="1">
+      <stop stop-color="#d7f4ff"/>
+      <stop offset=".45" stop-color="#91d1ff"/>
+      <stop offset="1" stop-color="#aa8cf7"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="60" fill="url(#surface)" stroke="url(#edge)" stroke-width="8"/>
+  <path d="M128 39 197 79v81l-69 42-69-42V79l69-40Z" fill="none" stroke="url(#edge)" stroke-width="11" stroke-linejoin="round"/>
+  <path d="m142 64-54 67h37l-12 58 56-74h-38l11-51Z" fill="url(#core)" stroke="url(#core)" stroke-width="7" stroke-linejoin="round"/>
+</svg>

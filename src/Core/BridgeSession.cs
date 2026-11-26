@@ -16,7 +16,8 @@ internal sealed class BridgeSession
         type = "start",
         id,
         mode = options.Mode == PlaybackMode.Full ? "full" : "quick",
-        reducedMotion
+        reducedMotion,
+        respectSystemReducedMotion = options.RespectReducedMotion
     });
 
     public BridgeEvent Receive(string source, string json)

@@ -7,7 +7,6 @@
 #stage[data-finished=true] .frame{border-color:#6994df22}
 
 @media(max-width:760px){.end .seal{width:35px;height:35px}.end .handoff{margin-top:14px}}
-@media(prefers-reduced-motion:reduce){.side,.centertext{transition:none}}
 body.reduced .side,body.reduced .centertext{transition:none}
 #stage:not([data-finished]) .side,#stage:not([data-finished]) .centertext{opacity:0}
 </style></head><body><main id="stage"><canvas id="field" aria-hidden="true"></canvas><div class="grain"></div><div class="frame"></div><header class="head"><span><b>SPARK</b> / NEURAL SYSTEMS</span><span class="sig" id="clock">T+ 00.000</span><span>LOCAL NODE / <span class="sig">01</span></span></header><div class="intro" id="intro"><div class="tiny">SPARK // PRIVATE AI INFRASTRUCTURE</div><div class="big">WAKE SIGNAL</div><div class="sub">ESTABLISHING EXECUTION CHANNEL</div></div><section class="side left" id="left"><h2><span>01</span> / BOOT CONSOLE</h2><div id="log" class="log"></div><div class="mini">PACKET STREAM / SIMULATED<svg viewBox="0 0 230 43" preserveAspectRatio="none"><path d="M0 33H230 M0 12H230" stroke="#233c66" stroke-width=".6"/><path id="wave" fill="none" stroke="#8bcfff" stroke-width="1.4"/></svg><span id="hex">0x0000 / INIT</span></div></section><section class="side right" id="right"><h2><span>02</span> / ENGINE MODULES</h2><div class="modules" id="modules"></div><div class="mini">NEURAL BUS / VISUALIZATION<svg viewBox="0 0 230 43" preserveAspectRatio="none" id="bars"></svg><span class="badge">LOCAL EXECUTION</span></div></section><section class="centertext" id="center"><div class="phase" id="phase">PHASE 01 / INITIALIZE</div><div class="status" id="status">SYNCHRONIZING CORE</div><div class="progress"><i id="progress"></i></div><div class="progtxt"><span>BOOT SEQUENCE</span><span id="percent">00%</span></div></section><div class="end" id="end"><svg class="seal" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 2 43 13V35L24 46 5 35V13Z" stroke="#76b9ed" stroke-width=".7"/><path d="M28 7 15 25h10l-4 16 15-21H25Z" fill="#d7f5ff"/><path d="M2 18V10L12 4M36 44l10-6v-8" stroke="#b59cff" stroke-width="1.5"/></svg><div class="tiny">SPARK / EXECUTION ENGINE</div><div class="word" data-text="CODEX">CODEX</div><div class="ready">— SYSTEM ONLINE —</div><div class="handoff">EXECUTION CHANNEL READY</div><div class="version">NEURAL OVERDRIVE / 03</div></div><div class="flash" id="flash"></div><footer class="foot"><span id="footstatus">&gt; SIGNAL ACQUISITION</span><span class="demo">ANIMATION DEMO / SIMULATED TELEMETRY</span></footer></main><script>
@@ -74,11 +73,13 @@ if (bridge) {
   bridge.addEventListener('message', ({data}) => {
     if (playbackId || !data || data.v !== 1 || data.type !== 'start' ||
         typeof data.id !== 'string' || !/^[a-f0-9]{32}$/.test(data.id) ||
-        !['full', 'quick'].includes(data.mode) || typeof data.reducedMotion !== 'boolean') return;
+        !['full', 'quick'].includes(data.mode) || typeof data.reducedMotion !== 'boolean' ||
+        (data.respectSystemReducedMotion !== undefined && typeof data.respectSystemReducedMotion !== 'boolean')) return;
 
     playbackId = data.id;
     rate = data.mode === 'quick' ? 1.8 : 1;
-    reduced = data.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    reduced = data.reducedMotion || (data.respectSystemReducedMotion !== false &&
+      matchMedia('(prefers-reduced-motion: reduce)').matches);
     if (reduced) document.body.classList.add('reduced');
     raf = requestAnimationFrame(frame);
   });

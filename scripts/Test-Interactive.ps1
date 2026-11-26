@@ -5,17 +5,19 @@ param(
     [string]$Scenario = 'Preview',
     [ValidateSet('Quick', 'Full', 'Direct')]
     [string]$Mode = 'Quick',
-    [switch]$Duplicate
+    [switch]$Duplicate,
+    [string]$LauncherPath
 )
 
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot
-$build = Join-Path $project '.local/mvp/win-x64'
-$run = $build
 $exeName = 'CodexBootAnimation.exe'
-if (-not (Test-Path -LiteralPath (Join-Path $build $exeName))) {
-    throw 'Build the MVP first with scripts/Build.ps1.'
+if (-not $LauncherPath) { $LauncherPath = Join-Path $project ".local/launcher/win-x64/$exeName" }
+if (-not (Test-Path -LiteralPath $LauncherPath -PathType Leaf) -or (Split-Path -Leaf $LauncherPath) -ne $exeName) {
+    throw 'Provide the path to CodexBootAnimation.exe or run scripts/Build.ps1.'
 }
+$build = Split-Path -Parent (Resolve-Path -LiteralPath $LauncherPath).Path
+$run = $build
 if ($Mode -eq 'Direct' -and $Scenario -notin 'Warm', 'Cold') {
     throw 'Direct mode is available for the Warm and Cold scenarios.'
 }

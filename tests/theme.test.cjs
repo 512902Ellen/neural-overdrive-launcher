@@ -123,3 +123,15 @@ test('native or browser reduced motion draws a static final frame', () => {
         assert.deepEqual(demo.messages.at(-1), { v: 1, type: 'completed', id });
     }
 });
+
+test('explicit reduced-motion opt-out overrides the browser setting', () => {
+    const demo = simulate({ systemReduced: true });
+    const start = { v: 1, type: 'start', id, mode: 'quick', reducedMotion: false };
+    demo.send({ ...start, respectSystemReducedMotion: 'false' });
+    assert.equal(demo.queued.size, 0);
+    demo.send({ ...start, respectSystemReducedMotion: false });
+    demo.tick(1000);
+    assert.equal(demo.get('#stage').dataset.finished, 'false');
+    demo.tick(6000);
+    assert.equal(demo.get('#stage').dataset.finished, 'true');
+});

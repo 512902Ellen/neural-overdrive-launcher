@@ -4,6 +4,13 @@ Launcher release versions follow [Semantic Versioning](https://semver.org/) once
 
 ## Unreleased
 
+### Launcher 0.2.0
+
+- Add a separate `--settings` entry with English and Simplified Chinese, a built-in theme preview, and controls for startup mode and reduced motion.
+- Save versioned preferences next to the executable with atomic replacement and safe defaults. Explicit launch options take precedence.
+- Add user-operated creation and removal of launcher desktop shortcuts and an independent multiresolution product icon.
+- Package a self-contained Windows x64 portable ZIP with a SHA-256 sidecar. Preserve the Windows launch fallback and bounded WebView2 playback.
+
 ### Launcher 0.1.0
 
 - Add a Windows 11 x64 MVP with 5-second, 9-second, direct and animation-only launch options.

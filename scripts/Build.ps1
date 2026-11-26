@@ -28,11 +28,12 @@ $settings = @{
     NUGET_HTTP_CACHE_PATH = Join-Path $local 'nuget/http-cache'
     NUGET_PLUGINS_CACHE_PATH = Join-Path $local 'nuget/plugins-cache'
     NUGET_SCRATCH = Join-Path $local 'nuget/scratch'
+    CODEX_BOOT_TEST_ROOT = Join-Path $local 'test-data'
 }
 $original = @{}
 $launcher = 'src/Launcher/Launcher.csproj'
 $tests = 'tests/Launcher.Tests/Launcher.Tests.csproj'
-$output = Join-Path $local 'mvp/win-x64'
+$output = Join-Path $local 'launcher/win-x64'
 
 function Invoke-Dotnet {
     & $dotnet @args
@@ -59,7 +60,7 @@ try {
         & node --test tests/theme.test.cjs
         if ($LASTEXITCODE -ne 0) { throw 'Theme tests failed.' }
     }
-    Write-Host "MVP: $(Join-Path $output 'CodexBootAnimation.exe')"
+    Write-Host "Launcher executable at $(Join-Path $output 'CodexBootAnimation.exe')"
 }
 finally {
     foreach ($item in $original.GetEnumerator()) {

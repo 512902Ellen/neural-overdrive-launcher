@@ -4,25 +4,45 @@ internal enum PlaybackMode { Full, Quick, Direct }
 internal enum AnimationEnd { Completed, Skipped, Closed, Failed, TimedOut }
 internal enum ClientStatus { WindowFound, Missing, ActivationFailed, TimedOut, Ambiguous }
 
-internal sealed record LaunchOptions(PlaybackMode Mode, bool Preview, bool Diagnostics, bool Help)
+internal sealed record LaunchOptions(PlaybackMode Mode, bool Preview, bool Diagnostics, bool Help,
+    bool Settings = false, UiLanguage Language = UiLanguage.English, bool RespectReducedMotion = true)
 {
-    public static bool TryParse(string[] args, out LaunchOptions options)
+    public static bool TryParse(string[] args, out LaunchOptions options) =>
+        TryParse(args, LauncherPreferences.Default, out options);
+
+    public static bool TryParse(string[] args, LauncherPreferences preferences, out LaunchOptions options)
     {
-        var mode = PlaybackMode.Quick;
-        var modeSet = false;
+        PlaybackMode? mode = null;
+        UiLanguage? language = null;
+        bool? respectMotion = null;
         var preview = false;
         var diagnostics = false;
         var help = false;
-        foreach (var arg in args)
+        var settings = false;
+        options = new(preferences.Mode, false, false, false, Language: preferences.Language,
+            RespectReducedMotion: preferences.RespectReducedMotion);
+        for (int i = 0; i < args.Length; i++)
         {
-            switch (arg)
+            switch (args[i])
             {
                 case "--preview": preview = true; break;
                 case "--diagnostics": diagnostics = true; break;
                 case "--help": help = true; break;
-                case "--full" or "--quick" or "--direct" when !modeSet:
-                    modeSet = true;
-                    mode = arg switch
+                case "--settings": settings = true; break;
+                case "--language" when language is null && i + 1 < args.Length:
+                    language = args[++i] switch
+                    {
+                        "en" => UiLanguage.English,
+                        "zh-CN" => UiLanguage.SimplifiedChinese,
+                        _ => null
+                    };
+                    if (language is null) return false;
+                    break;
+                case "--respect-reduced-motion" or "--ignore-reduced-motion" when respectMotion is null:
+                    respectMotion = args[i] == "--respect-reduced-motion";
+                    break;
+                case "--full" or "--quick" or "--direct" when mode is null:
+                    mode = args[i] switch
                     {
                         "--full" => PlaybackMode.Full,
                         "--direct" => PlaybackMode.Direct,
@@ -30,13 +50,20 @@ internal sealed record LaunchOptions(PlaybackMode Mode, bool Preview, bool Diagn
                     };
                     break;
                 default:
-                    options = new(mode, preview, diagnostics, help);
                     return false;
             }
         }
 
-        options = new(mode, preview, diagnostics, help);
-        return !preview || mode != PlaybackMode.Direct;
+        if (settings && (preview || mode is not null || respectMotion is not null) ||
+            preview && mode == PlaybackMode.Direct)
+            return false;
+
+        var effectiveMode = mode ?? preferences.Mode;
+        if (preview && effectiveMode == PlaybackMode.Direct)
+            effectiveMode = PlaybackMode.Quick;
+        options = new(effectiveMode, preview, diagnostics, help, settings, language ?? preferences.Language,
+            respectMotion ?? preferences.RespectReducedMotion);
+        return true;
     }
 
     public TimeSpan AnimationDuration => TimeSpan.FromSeconds(Mode == PlaybackMode.Full ? 9 : 5);

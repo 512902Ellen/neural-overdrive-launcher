@@ -4,6 +4,9 @@ using CodexBootAnimation;
 var tests = new (string Name, Func<Task> Run)[]
 {
     ("mode parsing and default", Modes),
+    ("launch entry options override stored preferences", PreferencesAndOptions),
+    ("portable settings round-trip, replacement, move and defaults", SettingsRoundTrip),
+    ("invalid, incomplete, oversized and future settings recover", SettingsRecovery),
     ("bridge source, size, shape, token and order", Bridge),
     ("no bridge startup and stalled playback deadlines", AnimationDeadlines),
     ("preview bypasses client", Preview),
@@ -14,7 +17,8 @@ var tests = new (string Name, Func<Task> Run)[]
     ("missing client ends animation early", Missing),
     ("activation failure ends animation early", ActivationFailure),
     ("closing launcher cancels client monitoring", Close),
-    ("client hard deadline leaves app independent", ClientTimeout)
+    ("client hard deadline leaves app independent", ClientTimeout),
+    ("Windows shortcut creation, conflicts and removal use an isolated folder", ShortcutTests.Run)
 };
 foreach (var (name, run) in tests)
 {
@@ -40,6 +44,71 @@ static Task Modes()
     return Task.CompletedTask;
 }
 
+static Task PreferencesAndOptions()
+{
+    var saved = new LauncherPreferences(PlaybackMode.Full, UiLanguage.SimplifiedChinese, false);
+    Check(LaunchOptions.TryParse([], saved, out var launch) && launch.Mode == PlaybackMode.Full &&
+        launch.Language == UiLanguage.SimplifiedChinese && !launch.RespectReducedMotion);
+    Check(LaunchOptions.TryParse(["--quick", "--language", "en", "--respect-reduced-motion"], saved, out var manual) &&
+        manual.Mode == PlaybackMode.Quick && manual.Language == UiLanguage.English && manual.RespectReducedMotion);
+    Check(LaunchOptions.TryParse(["--settings"], saved, out var settings) && settings.Settings && !settings.Preview);
+    Check(LaunchOptions.TryParse(["--preview"], saved with { Mode = PlaybackMode.Direct }, out var preview) &&
+        preview.Preview && preview.Mode == PlaybackMode.Quick);
+    Check(!LaunchOptions.TryParse(["--settings", "--direct"], saved, out _));
+    Check(!LaunchOptions.TryParse(["--settings", "--preview"], saved, out _));
+    Check(!LaunchOptions.TryParse(["--language"], saved, out _));
+    Check(!LaunchOptions.TryParse(["--language", "other"], saved, out _));
+    return Task.CompletedTask;
+}
+
+static Task SettingsRoundTrip()
+{
+    using var root = new TestDirectory();
+    string directory = Path.Combine(root.Path, "Portable 目录", ".launcher-data");
+    var store = new SettingsStore(directory);
+    Check(store.Load() == (LauncherPreferences.Default, SettingsState.Missing) && !Directory.Exists(directory));
+    var preferences = new LauncherPreferences(PlaybackMode.Full, UiLanguage.SimplifiedChinese, false);
+    store.Save(preferences);
+    using (var saved = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "settings.json"))))
+    {
+        Check(saved.RootElement.GetProperty("schemaVersion").GetInt32() == 1);
+        Check(saved.RootElement.GetProperty("language").GetString() == "zh-CN");
+    }
+    Check(store.Load() == (preferences, SettingsState.Loaded));
+    string moved = Path.Combine(root.Path, "Moved copy");
+    Directory.Move(Path.GetDirectoryName(directory)!, moved);
+    directory = Path.Combine(moved, ".launcher-data");
+    store = new SettingsStore(directory);
+    Check(store.Load() == (preferences, SettingsState.Loaded));
+    store.Save(LauncherPreferences.Default);
+    Check(store.Load() == (LauncherPreferences.Default, SettingsState.Loaded));
+    Check(Directory.GetFiles(directory).Length == 1);
+    return Task.CompletedTask;
+}
+
+static Task SettingsRecovery()
+{
+    using var root = new TestDirectory();
+    var store = new SettingsStore(root.Path);
+    var path = Path.Combine(root.Path, "settings.json");
+    foreach (string invalid in new[]
+    {
+        "", "{", "null", "{}", new string(' ', 4097),
+        """{"schemaVersion":2,"launchMode":"quick","language":"en","respectReducedMotion":true}""",
+        """{"schemaVersion":1,"launchMode":999,"language":"en","respectReducedMotion":true}""",
+        """{"schemaVersion":1,"launchMode":"quick","language":"unknown","respectReducedMotion":true}""",
+        """{"schemaVersion":1,"launchMode":"quick","language":"en"}"""
+    })
+    {
+        File.WriteAllText(path, invalid);
+        Check(store.Load() == (LauncherPreferences.Default, SettingsState.Recovered));
+        Check(File.ReadAllText(path) == invalid);
+    }
+    store.Save(LauncherPreferences.Default);
+    Check(store.Load() == (LauncherPreferences.Default, SettingsState.Loaded));
+    return Task.CompletedTask;
+}
+
 static Task Bridge()
 {
     var bridge = new BridgeSession();
@@ -54,6 +123,7 @@ static Task Bridge()
     var id = start.RootElement.GetProperty("id").GetString();
     Check(start.RootElement.GetProperty("mode").GetString() == "quick");
     Check(start.RootElement.GetProperty("reducedMotion").GetBoolean());
+    Check(start.RootElement.GetProperty("respectSystemReducedMotion").GetBoolean());
     BridgeEvent Message(string type, string? token) =>
         bridge.Receive(BridgeSession.Entry, JsonSerializer.Serialize(new { v = 1, type, id = token }));
     Check(Message("completed", id) == BridgeEvent.Rejected);
