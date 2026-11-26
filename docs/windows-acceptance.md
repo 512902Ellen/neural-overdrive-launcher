@@ -16,7 +16,7 @@ Use Windows 11 x64 and PowerShell 7. Use a separate Windows user session or test
 From the project root:
 
 ```powershell
-$launcher = '.\.local\launcher\win-x64\CodexBootAnimation.exe'
+$launcher = '.\.local\neural-overdrive-launcher\win-x64\NeuralOverdriveLauncher.exe'
 & $launcher --settings
 & $launcher --preview
 & $launcher --preview --full
@@ -33,7 +33,7 @@ Run one command at a time. For repeatable waits and diagnostic output, use the t
 .\scripts\Test-Interactive.ps1 -Scenario Warm -Mode Direct
 ```
 
-Pass `-LauncherPath` to the script to exercise the extracted EXE. For Phase 2 comparisons, point it at the retained v0.1.0 EXE.
+Pass `-LauncherPath` to the script to exercise the extracted EXE. For Phase 2 comparisons, run the retained v0.1.0 EXE directly.
 
 In the isolated Windows environment, establish that ChatGPT is closed before the cold check. Use Start to verify the native baseline in a separate run. The test script launches the MVP and waits for its result.
 
@@ -57,7 +57,7 @@ Exercise each Cold command from a fresh cold state. The logs distinguish an acce
 | Cold startup | Check that the client opens through Windows, including when the animation has already closed. Check the resulting ChatGPT or Codex surface by observation. |
 | Missing client | In an isolated test session without the supported package registered, run the launcher. Expect status 3 and an explanation when the launcher retains the interaction. |
 | Client startup timeout or ambiguous windows | In a test session where the client stays without an eligible window or presents indistinguishable candidates, expect status 4 and the animation to be gone. The client can still open later. The automated suite simulates a stalled client when a real timeout is unavailable. |
-| Launcher closes unexpectedly | In the isolated session, close the animation with Alt+F4, then separately end only the `CodexBootAnimation.exe` test process after activation. The client and original Start entry remain usable. |
+| Launcher closes unexpectedly | In the isolated session, close the animation with Alt+F4, then separately end only the `NeuralOverdriveLauncher.exe` test process after activation. The client and original Start entry remain usable. |
 | Focus, screen and DPI | Compare both settings languages with keyboard focus visible. Test settings and animation on each monitor and drag settings between differently scaled monitors. Check layout, close controls and native handoff. |
 
 Use these failure checks with a warm client. Each creates a test copy under `.local/acceptance/` and uses its own launcher data directory.
@@ -72,7 +72,7 @@ The first corrupts only the copied theme. The second points only the test launch
 ## Collect results
 
 - Run `.\scripts\Build.ps1 -Restore -Test` for .NET checks and Node timeline simulations. They cover timing, the bridge, failure recovery, launch precedence, JSON persistence and recovery, and real Windows Shell Links in a temporary directory. The desktop shortcut buttons require explicit user interaction.
-- `tests/Launcher.Windows.Tests/` drives the actual Windows settings window in a fresh copy. Build it with the pinned SDK, then run it with a disposable `CodexBootAnimation.exe` path and an ignored screenshot output directory. Use an interactive session because it exercises keyboard input in the launcher window.
+- `tests/Launcher.Windows.Tests/` drives the actual Windows settings window in a fresh copy. Build it with the pinned SDK, then run it with a disposable `NeuralOverdriveLauncher.exe` path and an ignored screenshot output directory. Use an interactive session because it exercises keyboard input in the launcher window.
 - Add `--diagnostics` or run the test script. Logs contain elapsed milliseconds and fixed stage names. Compare window showing to `theme-first-frame-rendered`, first render to `theme-completed`, and activation acceptance to `client-window-stable` and handoff. A draw callback estimates the first frame. Confirm the actual displayed frame visually.
 - The launcher records its own CPU time and peak working set. For total CPU, GPU and memory, measure the launcher and its WebView2 children in Task Manager in an isolated preview. Record display resolution, scale, WebView2 version, cold or warm state, and sample count. Keep workstation evidence in ignored local storage.
 - Exit status 0 covers completed or skipped preview, a stable client window, a closed launcher window, or a suppressed duplicate. Status 1 indicates a launcher error, 2 indicates invalid arguments, 3 indicates unavailable registration or failed activation, 4 indicates timeout or ambiguous windows, and 5 indicates a failed preview.

@@ -31,10 +31,10 @@ internal static class ShortcutTests
         using var root = new TestDirectory();
         string desktop = Directory.CreateDirectory(Path.Combine(root.Path, "桌面 测试")).FullName;
         string portable = Directory.CreateDirectory(Path.Combine(root.Path, "便携 程序")).FullName;
-        string executable = Path.Combine(portable, "CodexBootAnimation.exe");
+        string executable = Path.Combine(portable, "NeuralOverdriveLauncher.exe");
         File.WriteAllText(executable, "fixture");
         var shortcuts = new DesktopShortcuts(desktop, executable);
-        string launch = Path.Combine(desktop, "Codex Boot Animation - Launch Codex.lnk");
+        string launch = Path.Combine(desktop, "Neural Overdrive Launcher - Launch Codex.lnk");
         string official = Path.Combine(desktop, "ChatGPT.lnk");
         File.WriteAllText(official, "fixture for official shortcut filename");
         File.WriteAllText(launch, "another application uses this filename");

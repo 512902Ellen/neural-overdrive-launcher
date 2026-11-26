@@ -1,6 +1,6 @@
-# Codex Boot Animation
+# Neural Overdrive Launcher
 
-Codex Boot Animation plays **NEURAL OVERDRIVE** while Windows opens the ChatGPT desktop app or finds its existing window. It is an independent, unofficial project and is unaffiliated with OpenAI.
+Neural Overdrive Launcher plays **NEURAL OVERDRIVE** while Windows opens the ChatGPT desktop app or finds its existing window. It is an unofficial Codex launcher for Windows and is unaffiliated with OpenAI.
 
 [简体中文](README.zh-CN.md) · [v0.2.0 Beta release notes](docs/releases/v0.2.0-beta.md) · [Changelog](CHANGELOG.md)
 
@@ -20,10 +20,10 @@ Codex Boot Animation plays **NEURAL OVERDRIVE** while Windows opens the ChatGPT 
 
 Use Windows 11 x64, the registered ChatGPT desktop app, and Evergreen WebView2 for animation. The portable ZIP includes the .NET runtime. Settings and animation-only preview work independently of ChatGPT. Windows can open ChatGPT via Direct mode or use the native launch path when the animation fails. [Microsoft WebView2 distribution guide](https://learn.microsoft.com/microsoft-edge/webview2/concepts/distribution)
 
-1. Get `CodexBootAnimation-0.2.0-beta-win-x64.zip` and its `.sha256` file from the [v0.2.0 Beta release](https://github.com/512902Ellen/codex-boot-animation/releases/tag/v0.2.0-beta). Run `Get-FileHash .\CodexBootAnimation-0.2.0-beta-win-x64.zip -Algorithm SHA256` and compare the value.
+1. Get `NeuralOverdriveLauncher-0.2.0-beta-win-x64.zip` and its `.sha256` file from the [v0.2.0 Beta release](https://github.com/512902Ellen/neural-overdrive-launcher/releases/tag/v0.2.0-beta). Run `Get-FileHash .\NeuralOverdriveLauncher-0.2.0-beta-win-x64.zip -Algorithm SHA256` and compare the value.
 2. Extract the whole ZIP to a writable folder. Keep the executable, DLLs and `theme/` together.
-3. Double-click `CodexBootAnimation.exe` to launch. The fresh default is **Quick**, a five-second animation.
-4. To open settings, run `& '.\CodexBootAnimation.exe' --settings` from the extracted folder in PowerShell. In settings, use **Add Launch Codex** and **Add Launcher Settings** to create separate desktop shortcuts.
+3. Double-click `NeuralOverdriveLauncher.exe` to launch. The fresh default is **Quick**, a five-second animation.
+4. To open settings, run `& '.\NeuralOverdriveLauncher.exe' --settings` from the extracted folder in PowerShell. In settings, use **Add Launch Codex** and **Add Launcher Settings** to create separate desktop shortcuts.
 
 For everyday use, extract to a permanent writable folder, pick a mode and select **Save Settings**, then select **Add Launch Codex**. Open that new desktop shortcut whenever you want to launch. Keep the original Start menu entry available for direct access.
 
@@ -32,10 +32,10 @@ For everyday use, extract to a permanent writable folder, pick a mode and select
 **Quick** plays for five seconds. **Cinematic** plays for nine seconds. **Direct** uses the Windows entry without animation. Select English or 简体中文 and choose whether to respect Windows reduced-motion preferences. Click **Save Settings** to use those choices on subsequent launches. **Reset to Defaults** restores the form, and **Save Settings** keeps the defaults. An animation preview uses the current controls and skips client activation. Direct previews use the Quick animation. Press Esc during the animation to dismiss it.
 
 ```powershell
-& '.\CodexBootAnimation.exe' --settings
-& '.\CodexBootAnimation.exe' --quick
-& '.\CodexBootAnimation.exe' --preview --full
-& '.\CodexBootAnimation.exe' --direct
+& '.\NeuralOverdriveLauncher.exe' --settings
+& '.\NeuralOverdriveLauncher.exe' --quick
+& '.\NeuralOverdriveLauncher.exe' --preview --full
+& '.\NeuralOverdriveLauncher.exe' --direct
 ```
 
 Explicit `--quick`, `--full`, or `--direct` takes precedence over the saved mode. `--language en` or `--language zh-CN` selects the launcher's language for the invocation. `--respect-reduced-motion` and `--ignore-reduced-motion` override the saved motion choice for launch or preview. `--diagnostics` collects stage timings in the portable data directory. `--help` lists the options.
@@ -60,8 +60,8 @@ Use PowerShell 7 and Node.js on Windows x64. The provisioning script downloads t
 .\scripts\Package-Portable.ps1 -Beta
 ```
 
-The EXE is under `.local/launcher/win-x64/`. The local ZIP and SHA-256 sidecar are under `.local/release/`. `src/Core/` contains launch coordination and preferences. `src/Launcher/` contains the WPF interface, WebView2 host and Windows integration. `themes/` holds the reference and launcher theme. `assets/` holds the editable SVG and Windows ICO.
+The EXE is under `.local/neural-overdrive-launcher/win-x64/`. The local ZIP and SHA-256 sidecar are under `.local/release/`. `src/Core/` contains launch coordination and preferences. `src/Launcher/` contains the WPF interface, WebView2 host and Windows integration. `themes/` holds the reference and launcher theme. `assets/` holds the editable SVG and Windows ICO.
 
 ## License and project status
 
-See the [third-party dependency notices](THIRD_PARTY_NOTICES.md) for bundled components and their license terms. The project MIT license is pending owner confirmation before publication.
+See the [third-party dependency notices](THIRD_PARTY_NOTICES.md) for bundled components and their license terms. Project-owned content is available under the [MIT License](LICENSE). Copyright © 2026 Lv Yifan.

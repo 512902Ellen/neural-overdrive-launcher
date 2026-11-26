@@ -33,7 +33,7 @@ $settings = @{
 $original = @{}
 $launcher = 'src/Launcher/Launcher.csproj'
 $tests = 'tests/Launcher.Tests/Launcher.Tests.csproj'
-$output = Join-Path $local 'launcher/win-x64'
+$output = Join-Path $local 'neural-overdrive-launcher/win-x64'
 
 function Invoke-Dotnet {
     & $dotnet @args
@@ -60,7 +60,7 @@ try {
         & node --test tests/theme.test.cjs
         if ($LASTEXITCODE -ne 0) { throw 'Theme tests failed.' }
     }
-    Write-Host "Launcher executable at $(Join-Path $output 'CodexBootAnimation.exe')"
+    Write-Host "Launcher executable at $(Join-Path $output 'NeuralOverdriveLauncher.exe')"
 }
 finally {
     foreach ($item in $original.GetEnumerator()) {

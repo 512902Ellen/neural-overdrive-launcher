@@ -1,6 +1,6 @@
-# Codex Boot Animation
+# Neural Overdrive Launcher
 
-Codex Boot Animation 在 Windows 打开 ChatGPT 桌面应用或找到已有窗口时播放 **NEURAL OVERDRIVE** 动画。该项目独立开发，属于非官方项目，与 OpenAI 无关联。
+Neural Overdrive Launcher 在 Windows 打开 ChatGPT 桌面应用或找到已有窗口时播放 **NEURAL OVERDRIVE** 动画。这是一个非官方 Codex 启动器，与 OpenAI 无关联。
 
 [English](README.md) · [v0.2.0 Beta 发布说明](docs/releases/v0.2.0-beta.md) · [更新记录](CHANGELOG.md)
 
@@ -20,10 +20,10 @@ Codex Boot Animation 在 Windows 打开 ChatGPT 桌面应用或找到已有窗�
 
 当前验收基于 Windows 11 x64。启动客户端需要当前 Windows 用户已注册 ChatGPT 桌面应用，播放动画需要 Evergreen WebView2。便携包已包含 .NET 运行时。独立预览和设置中心可以在没有 ChatGPT 的环境中使用。 [Microsoft WebView2 说明](https://learn.microsoft.com/microsoft-edge/webview2/concepts/distribution)
 
-1. 从 [v0.2.0 Beta 发布页](https://github.com/512902Ellen/codex-boot-animation/releases/tag/v0.2.0-beta) 获取 `CodexBootAnimation-0.2.0-beta-win-x64.zip` 和 `.sha256`。运行 `Get-FileHash .\CodexBootAnimation-0.2.0-beta-win-x64.zip -Algorithm SHA256` 并对照校验值。
+1. 从 [v0.2.0 Beta 发布页](https://github.com/512902Ellen/neural-overdrive-launcher/releases/tag/v0.2.0-beta) 获取 `NeuralOverdriveLauncher-0.2.0-beta-win-x64.zip` 和 `.sha256`。运行 `Get-FileHash .\NeuralOverdriveLauncher-0.2.0-beta-win-x64.zip -Algorithm SHA256` 并对照校验值。
 2. 将完整 ZIP 解压到有写入权限的目录，保留 EXE、DLL 与 `theme/` 的相对位置。
-3. 双击 `CodexBootAnimation.exe` 启动。首次使用默认播放 5 秒快速动画。
-4. 要进入设置中心，可在解压目录的 PowerShell 中运行 `& '.\CodexBootAnimation.exe' --settings`。设置页面可分别添加动画启动和设置入口的桌面快捷方式。
+3. 双击 `NeuralOverdriveLauncher.exe` 启动。首次使用默认播放 5 秒快速动画。
+4. 要进入设置中心，可在解压目录的 PowerShell 中运行 `& '.\NeuralOverdriveLauncher.exe' --settings`。设置页面可分别添加动画启动和设置入口的桌面快捷方式。
 
 日常使用时，把便携包解压到固定的可写目录，选定模式并点击「保存设置」，再点击「添加 Codex 启动入口」。之后使用新建的桌面快捷方式。原有的「开始」菜单入口也可以继续使用。
 
@@ -34,10 +34,10 @@ Codex Boot Animation 在 Windows 打开 ChatGPT 桌面应用或找到已有窗�
 「预览动画」根据当前表单播放。直接启动模式下按快速模式预览。预览期间不会启动 ChatGPT。播放动画时按 Esc 可关闭动画。
 
 ```powershell
-& '.\CodexBootAnimation.exe' --settings
-& '.\CodexBootAnimation.exe' --quick
-& '.\CodexBootAnimation.exe' --preview --full
-& '.\CodexBootAnimation.exe' --direct
+& '.\NeuralOverdriveLauncher.exe' --settings
+& '.\NeuralOverdriveLauncher.exe' --quick
+& '.\NeuralOverdriveLauncher.exe' --preview --full
+& '.\NeuralOverdriveLauncher.exe' --direct
 ```
 
 显式指定的 `--quick`、`--full` 或 `--direct` 优先于保存的启动模式。`--language en` 或 `--language zh-CN` 可指定本次启动器语言。`--respect-reduced-motion` 和 `--ignore-reduced-motion` 可覆盖本次启动或预览的动态效果偏好。用 `--diagnostics` 将阶段耗时记录到便携数据目录，或用 `--help` 查看参数。
@@ -54,4 +54,4 @@ Windows 原生入口使用已注册的 ChatGPT 应用。客户端决定实际显
 
 在 Windows x64 上使用 PowerShell 7 和 Node.js，按 [英文 README](README.md#build-from-source) 构建。SDK、缓存、构建产物和便携包都位于 `.local/`。
 
-项目 MIT 许可证待所有者确认后生效。便携包附有 Microsoft 组件的许可证和声明。详见 [第三方依赖声明](THIRD_PARTY_NOTICES.md)。
+项目自有内容采用 [MIT 许可证](LICENSE)，版权所有 © 2026 Lv Yifan。便携包附有 Microsoft 组件的许可证和声明。详见 [第三方依赖声明](THIRD_PARTY_NOTICES.md)。

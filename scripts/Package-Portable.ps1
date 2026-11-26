@@ -4,11 +4,11 @@ param([switch]$Beta)
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot
 $local = Join-Path $project '.local'
-$build = Join-Path $local 'launcher/win-x64'
-$exe = Get-Item -LiteralPath (Join-Path $build 'CodexBootAnimation.exe')
+$build = Join-Path $local 'neural-overdrive-launcher/win-x64'
+$exe = Get-Item -LiteralPath (Join-Path $build 'NeuralOverdriveLauncher.exe')
 $version = $exe.VersionInfo.FileVersionRaw.ToString(3)
 $channel = if ($Beta) { '-beta' } else { '' }
-$name = "CodexBootAnimation-$version$channel-win-x64"
+$name = "NeuralOverdriveLauncher-$version$channel-win-x64"
 $output = New-Item -ItemType Directory -Path (Join-Path $local 'release') -Force
 $destination = Join-Path $output.FullName "$name.zip"
 $temporary = Join-Path $output.FullName "$name-$([guid]::NewGuid().ToString('N')).tmp"
@@ -42,7 +42,7 @@ try {
 
         Add-Entry $exe.FullName $exe.Name
         foreach ($file in Get-ChildItem -LiteralPath $build -File | Sort-Object Name) {
-            if ($file.Extension -eq '.dll' -or $file.Name -match '^CodexBootAnimation\.(deps|runtimeconfig)\.json$') {
+            if ($file.Extension -eq '.dll' -or $file.Name -match '^NeuralOverdriveLauncher\.(deps|runtimeconfig)\.json$') {
                 Add-Entry $file.FullName $file.Name
             }
         }

@@ -1,4 +1,4 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CodexBootAnimation")]
+[assembly: InternalsVisibleTo("NeuralOverdriveLauncher")]
 [assembly: InternalsVisibleTo("Launcher.Tests")]

@@ -8,7 +8,7 @@ namespace CodexBootAnimation;
 
 internal static class Program
 {
-    private const string Title = "Codex Boot Animation";
+    private const string Title = "Neural Overdrive Launcher";
 
     [STAThread]
     private static int Main(string[] args)

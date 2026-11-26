@@ -14,7 +14,7 @@ internal enum ShortcutRemoval { Missing, Removed, Conflict }
 internal sealed class DesktopShortcuts(string desktop, string executable)
 {
     private static readonly Guid ShellLinkClass = new("00021401-0000-0000-C000-000000000046");
-    private const string Owner = "Codex Boot Animation portable launcher | ";
+    private const string Owner = "Neural Overdrive Launcher portable launcher | ";
 
     public ShortcutResult Create(ShortcutKind kind)
     {
@@ -50,7 +50,7 @@ internal sealed class DesktopShortcuts(string desktop, string executable)
     }
 
     private string PathFor(ShortcutKind kind) => Path.Combine(desktop, kind == ShortcutKind.Settings
-        ? "Codex Boot Animation - Launcher Settings.lnk" : "Codex Boot Animation - Launch Codex.lnk");
+        ? "Neural Overdrive Launcher - Launcher Settings.lnk" : "Neural Overdrive Launcher - Launch Codex.lnk");
 
     private static string Arguments(ShortcutKind kind) => kind == ShortcutKind.Settings ? "--settings" : "";
 

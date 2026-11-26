@@ -49,7 +49,7 @@ internal sealed class AnimationHost(ForegroundHandoff focus, Action<string> reco
     {
         window = new Window
         {
-            Title = "Codex Boot Animation",
+            Title = "Neural Overdrive Launcher",
             WindowStyle = WindowStyle.None,
             ResizeMode = ResizeMode.NoResize,
             Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(3, 6, 17)),

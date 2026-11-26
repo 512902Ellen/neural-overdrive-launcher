@@ -11,10 +11,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $project = Split-Path -Parent $PSScriptRoot
-$exeName = 'CodexBootAnimation.exe'
-if (-not $LauncherPath) { $LauncherPath = Join-Path $project ".local/launcher/win-x64/$exeName" }
+$exeName = 'NeuralOverdriveLauncher.exe'
+if (-not $LauncherPath) { $LauncherPath = Join-Path $project ".local/neural-overdrive-launcher/win-x64/$exeName" }
 if (-not (Test-Path -LiteralPath $LauncherPath -PathType Leaf) -or (Split-Path -Leaf $LauncherPath) -ne $exeName) {
-    throw 'Provide the path to CodexBootAnimation.exe or run scripts/Build.ps1.'
+    throw 'Provide the path to NeuralOverdriveLauncher.exe or run scripts/Build.ps1.'
 }
 $build = Split-Path -Parent (Resolve-Path -LiteralPath $LauncherPath).Path
 $run = $build
